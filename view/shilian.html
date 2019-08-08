@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title>确认支付</title>
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" />
+
+  <link rel="stylesheet" href="__STATIC__/css/antui.css" />
+  <link rel="stylesheet" href="__STATIC__/css/card.css" />
+
+  <style>
+    .am-notice .am-notice-content:before {
+      background: transparent;
+    }
+
+    .am-card-item {
+      position: relative;
+      margin-top: 0 !important;
+      padding: 0 !important;
+    }
+
+
+    li {
+      height: 35px;
+      line-height: 35px;
+      padding-left: 15px;
+      color: #a8a8a8;
+    }
+
+    li.active {
+      background-color: #e5e5e5;
+    }
+
+    #amount {
+      text-align: center;
+      padding: 0 10px;
+      position: relative;
+    }
+
+    #amount .x-cont {
+      width: 100%;
+    }
+
+    .p-1 {
+      text-shadow: 0.1em 0.1em 0.5em red;
+      font-weight: bold;
+    }
+
+    .tips-o {
+      color: red;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="amount">
+    <div class="x-cont" id="qrcode">
+      <img width="150px" id="qrcodeImg" height="150px" src="<?php echo $pay_url;?>" />
+      <div id="left-1" class="tips-o">
+        切记:私下转账,修改金额都会造成不到账!!!
+      </div>
+      
+    </div>
+  </div>
+  <div id="content">
+    <div class="am-card">
+      <div class="am-card-item am-card-minfo am-card-noicon">
+        <div class="am-card-content">
+          <ul>
+            <li style="color:red;font-size:16px;"><span id="sencode"></span></li>
+            <!--<li class="active">收款姓名：</li>
+            <li style="display:none;">收款账号：13686547550@163.com</li>-->
+            <li>金&nbsp;&nbsp;额&nbsp;&nbsp;： <b style="color:red;font-size:16px;">¥<?php echo $money;?></b> </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="am-message result" style="padding:0 10px;margin-top: -10px">
+      <div class="am-message-sub" id="lxTips" style="font-size:16px;text-align: left;padding: 10px;background-color: white">
+        <p style="display: inline-block;font-size:20px" class="am-ft-orange p-1"><b>切记:不要扫描第二次！不要用其他手机扫码！不要扫描第二次！不要用其他手机扫码！</b></p>
+        <P>1、请截屏保存图片。</P>
+        <p>2、打开<?php echo $appnotice;?>,选择<span class="am-ft-orange">扫一扫</span>。</p>
+        <p>3、选择右上角相册。</p>
+        <p>4、选择最新保存的二维码图片。</p>
+        <span style="margin-top:10px;display: inline-block" class="am-ft-orange"><b>切记：若已支付，请不要重复支付，避免造成金额损失！</b></span>
+      </div>
+      <div class="am-message result" id="bigAmountTips" style="margin-top: -10px;display:none;">
+        <div class="am-message-sub" style="font-size:16px;text-align: left;padding: 10px;background-color: white">
+          <p style="display: inline-block;font-size:20px" class="am-ft-orange"><b>温馨提示</b></p>
+          <P> 转账金额较大，为了避免转错账，请补全对方姓名后再转帐：</P>
+          <b style="margin-top:10px;line-height:25px;display: block"><span class="am-ft-orange" style="font-size:25px;"></span></b>
+          <span style="margin-top:10px;display: inline-block" class="am-ft-orange"><b>切记：若已支付，请不要重复支付，避免造成金额损失！</b></span>
+        </div>
+      </div>
+    </div>
+</body>
+
+</html>
+<script>
+  var sureNameCount = 5;
+  var startTime = '<?php echo $startTime;?>'.replace('年', '-').replace('月', '-');
+  var endTime = '<?php echo $endTime;?>'.replace('年', '-').replace('月', '-');
+
+  var eml = document.querySelector(".p-1");
+  var colorArr = ["#e8541e", "#a8e81e"];
+  var index = 0;
+  setInterval(function () {
+    
+    
+    eml.style.textShadow = "0.1em 0.1em 1em " + colorArr[index];
+    index++;
+    if (index == colorArr.length) {
+      index = 0;
+    }
+  }, 400);
+
+  var isNewPlayer = parseInt("1");
+  if (isNewPlayer != 1) {
+    document.querySelector("#bigAmountTips").style.display = "block";
+    document.querySelector("#lxTips").style.display = "none";
+  } else {
+    document.querySelector("#lxTips").style.display = "block";
+    document.querySelector("#bigAmountTips").style.display = "none";
+  }
+
+
+  function getToBaeiJing() {
+    var dt = new Date();
+    var year = dt.getUTCFullYear();
+    var month = dt.getUTCMonth();
+    var day = dt.getUTCDate();
+    var hours = dt.getUTCHours();
+    var minutes = dt.getMinutes();
+    var seconds = dt.getUTCSeconds();
+    dt = new Date(year + '/' + (parseInt(month) + 1) + "/" + day + " " + hours + ":" + minutes + ":" + seconds)
+    dt.setHours(dt.getHours() + 8);
+
+    return dt;
+  }
+
+  function diffSeconds() {
+    var stime = getToBaeiJing();
+    var etime = new Date(endTime.replace(/\-/g, '/'));
+    var secondsEml = document.querySelector('#sencode');
+    if (Date.parse(stime) >= Date.parse(etime)) {
+      secondsEml.innerHTML = "订单已过期";
+      document.body.innerHTML = "订单已过期";
+      return
+    }
+    var totalMilliseconds = etime.getTime() - stime.getTime();
+    var seconds = parseInt(totalMilliseconds / 1000);
+    if (isNaN(seconds)) {
+      secondsEml.innerHTML = "订单已过期";
+      document.body.innerHTML = "订单已过期";
+      return
+    }
+    var timer = window.setInterval(function () {
+        seconds--;
+        secondsEml.innerHTML = '<i class="fa fa-clock-o" aria-hidden="true"></i>订单剩余有效时间：' + seconds + "s"
+        if (seconds <= 0) {
+          secondsEml.innerHTML = "订单已过期";
+          document.body.innerHTML = "订单已过期";
+          window.clearInterval(timer);
+        }
+      },
+      1000);
+  }
+  diffSeconds();
+</script>
