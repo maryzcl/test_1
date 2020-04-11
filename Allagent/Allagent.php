@@ -498,4 +498,9 @@ class Allagent extends RestBaseController
         }
         
     }
+	public function demo()
+	{
+		
+	}
+	
 }
