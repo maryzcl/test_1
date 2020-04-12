@@ -500,6 +500,10 @@ class Allagent extends RestBaseController
     }
 	public function demo()
 	{
+		echo 'demo demo '
+	}
+	public function demo1()
+	{
 		
 	}
 	
