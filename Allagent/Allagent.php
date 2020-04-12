@@ -504,7 +504,7 @@ class Allagent extends RestBaseController
 	}
 	public function demo1()
 	{
-		echo 'demo2'
+		echo 'i am two'
 	}
 	
 }
